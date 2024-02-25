@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run install script
         run: ./scripts/install-qstract.sh
-      - run: qstract ./test/t3archive.tar
+      - run: ./qstract ./test/t3archive.tar
 
   test-install-script-2:
     runs-on: ubuntu-latest
@@ -24,7 +24,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run install script
         run: LIBC=musl ./scripts/install-qstract.sh
-      - run: qstract -z ./test/tarchive1.tar.gz
+      - run: ./qstract -z ./test/tarchive1.tar.gz
 
   test-install-script-3:
     runs-on: ubuntu-latest

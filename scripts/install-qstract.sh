@@ -22,12 +22,13 @@ L_URL="https://github.com/cargo-prebuilt/qstract/releases/latest/download/"
 V_URL="https://github.com/cargo-prebuilt/qstract/releases/download/v"
 
 : ${VERSION:="latest"}
+: ${INSTALL_PATH:="./"}
 
 : ${ARCH:="$(uname -m)"}
 : ${OS_TYPE:="$(uname -s)"}
 : ${LIBC:="gnu"}
 
-if [ -z $TARGET_STRING ]; then
+if [ -z ${TARGET_STRING+x} ]; then
     # Build target string
     TARGET_STRING=""
 
@@ -105,4 +106,5 @@ fi
 # Download
 BIN_URL="$URL"'qstract-'"$TARGET_STRING"
 
-curl --proto '=https' --tlsv1.2 -fsSL "$BIN_URL" -o $INSTALL_PATH/qstract
+curl --proto '=https' --tlsv1.2 -fsSL "$BIN_URL" -o "$INSTALL_PATH"qstract
+chmod +x "$INSTALL_PATH"qstract

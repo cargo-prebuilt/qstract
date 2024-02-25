@@ -8,13 +8,13 @@ A very simple tar extraction program.
 
 ## Installation
 
-<!-- - You can download the latest prebuilt binaries of qstract [here](https://github.com/cargo-prebuilt/qstract/releases/latest). -->
+- You can download the latest prebuilt binaries of qstract [here](https://github.com/cargo-prebuilt/qstract/releases/latest).
 <!-- - Cargo install: ```cargo install qstract``` -->
 <!-- - Cargo prebuilt: ```cargo prebuilt qstract``` -->
-<!-- - Cargo binstall: ```cargo binstall qstract --no-confirm``` -->
-<!-- - Cargo quickinstall: ```cargo quickinstall qstract``` -->
-<!-- - Homebrew: ```brew install crow-rest/harmless/qstract``` -->
-<!-- - Install script (unix platforms): ```curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-prebuilt/qstract/main/scripts/install-qstract.sh | bash``` -->
+- Cargo binstall: ```cargo binstall qstract --no-confirm```
+- Cargo quickinstall: ```cargo quickinstall qstract```
+- Homebrew: ```brew install crow-rest/harmless/qstract```
+- Install script (unix platforms): ```curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-prebuilt/qstract/main/scripts/install-qstract.sh | bash```
 <!-- - For github actions you can use [cargo-prebuilt/cargo-prebuilt-action](https://github.com/cargo-prebuilt/cargo-prebuilt-action) -->
 
 ## Args

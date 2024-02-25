@@ -353,15 +353,6 @@ jobs:
           pkgs: coreutils
       - uses: Swatinem/rust-cache@v2
         if: ${{ env.cache == 'true' }}
-      - name: Run tests
-        if: ${{ matrix.can-test }}
-        run: |
-          docker run --rm \
-          --userns host --user $(id -u):$(id -g) \
-          -v $HOME/.cargo/registry:/usr/local/cargo/registry \
-          -v ./:/project \
-          ghcr.io/cargo-prebuilt/ink-cross:stable-${{ matrix.target }} \
-          test --verbose --workspace --release --locked --target ${{ matrix.target }} ${{ env.feature-set }}
       - name: Build
         run: |
           docker run --rm \
@@ -370,6 +361,10 @@ jobs:
           -v ./:/project \
           ghcr.io/cargo-prebuilt/ink-cross:stable-${{ matrix.target }} \
           auditable build --verbose --workspace --release --locked --target ${{ matrix.target }} ${{ env.feature-set }}
+      - name: Run tests
+        if: ${{ matrix.can-test }}
+        run: |
+          BIN_LOC="./target/${{ matrix.target }}/release/${{ env.bin-name }}" ./test/_test.sh
       - name: Tar
         run: tar czvf ${{ matrix.target }}.tar.gz -C ./target/${{ matrix.target }}/release ${{ env.bin-name }}
       - name: Hash
@@ -409,9 +404,6 @@ jobs:
           pkgs: cross,coreutils
       - uses: Swatinem/rust-cache@v2
         if: ${{ env.cache == 'true' }}
-      - name: Run tests
-        if: ${{ matrix.can-test }}
-        run: cross test --verbose --workspace --release --locked --target ${{ matrix.target }} ${{ env.feature-set }}
       - name: Build
         run: cross build --verbose --workspace --release --locked --target ${{ matrix.target }} ${{ env.feature-set }}
       - name: Tar
@@ -449,10 +441,12 @@ jobs:
           pkgs: cargo-auditable,coreutils
       - uses: Swatinem/rust-cache@v2
         if: ${{ env.cache == 'true' }}
-      - name: Run tests
-        run: cargo test --verbose --workspace --release --locked --target ${{ matrix.target }} ${{ env.feature-set }}
       - name: Build
         run: cargo auditable build --verbose --workspace --release --locked --target ${{ matrix.target }} ${{ env.feature-set }}
+      - name: Run tests
+        if: ${{ matrix.can-test }}
+        run: |
+          BIN_LOC="./target/${{ matrix.target }}/release/${{ env.bin-name }}" ./test/_test.sh
       - name: Tar
         run: tar czvf ${{ matrix.target }}.tar.gz -C ./target/${{ matrix.target }}/release ${{ env.bin-name }}
       - name: Hash
@@ -488,9 +482,6 @@ jobs:
           pkgs: cargo-auditable,coreutils
       - uses: Swatinem/rust-cache@v2
         if: ${{ env.cache == 'true' }}
-      - name: Run tests
-        if: ${{ matrix.can-test }}
-        run: cargo test --verbose --workspace --release --locked --target ${{ matrix.target }} ${{ env.feature-set }}
       - name: Build
         run: cargo auditable build --verbose --workspace --release --locked --target ${{ matrix.target }} ${{ env.feature-set }}
       - name: Zip

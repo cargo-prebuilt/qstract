@@ -8,7 +8,7 @@ readme = "README.md"
 license = "MIT"
 repository = "https://github.com/cargo-prebuilt/qstract"
 keywords = ["binary", "tar"]
-#rust-version = "1.70"
+rust-version = "1.63"
 include = [
     "src/",
     "build.rs",
@@ -21,6 +21,7 @@ include = [
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+anyhow = "1.0.80"
 flate2 = "1.0.28"
 pico-args = { version = "0.5.0", features = ["eq-separator"] }
 tar = "0.4.40"

@@ -45,15 +45,6 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           key: ${{ matrix.target }}
-      - name: Run tests
-        if: ${{ matrix.can-test }}
-        run: |
-          docker run --rm \
-          --userns host --user $(id -u):$(id -g) \
-          -v $HOME/.cargo/registry:/usr/local/cargo/registry \
-          -v ./:/project \
-          ghcr.io/cargo-prebuilt/ink-cross:stable-${{ matrix.target }} \
-          test --verbose --workspace --locked --target ${{ matrix.target }} ${{ env.feature-set }}
       - name: Build with ink cross
         run: |
           docker run --rm \
@@ -62,6 +53,10 @@ jobs:
           -v ./:/project \
           ghcr.io/cargo-prebuilt/ink-cross:stable-${{ matrix.target }} \
           auditable build --verbose --workspace --locked --target ${{ matrix.target }} ${{ env.feature-set }}
+      - name: Run tests
+        if: ${{ matrix.can-test }}
+        run: |
+          BIN_LOC="./target/${{ matrix.target }}/debug/${{ env.bin-name }}" ./test/_test.sh
       - name: Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -75,13 +70,9 @@ jobs:
       matrix:
         include:
           - target: x86_64-unknown-freebsd
-            can-test: false
           - target: x86_64-unknown-netbsd
-            can-test: false
           - target: x86_64-unknown-illumos
-            can-test: false
           - target: powerpc64-unknown-linux-gnu
-            can-test: true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -96,9 +87,6 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           key: ${{ matrix.target }}
-      - name: Run tests
-        if: ${{ matrix.can-test }}
-        run: cross test --verbose --workspace --locked --target ${{ matrix.target }} ${{ env.feature-set }}
       - name: Build
         run: cross build --verbose --workspace --locked --target ${{ matrix.target }} ${{ env.feature-set }}
       - name: Artifact
@@ -131,10 +119,12 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           key: ${{ matrix.target }}
-      - name: Run tests
-        run: cargo test --verbose --workspace --locked --target ${{ matrix.target }} ${{ env.feature-set }}
       - name: Build
         run: cargo auditable build --verbose --workspace --locked --target ${{ matrix.target }} ${{ env.feature-set }}
+      - name: Run tests
+        if: ${{ matrix.can-test }}
+        run: |
+          BIN_LOC="./target/${{ matrix.target }}/debug/${{ env.bin-name }}" ./test/_test.sh
       - name: Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -165,9 +155,6 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           key: ${{ matrix.target }}
-      - name: Run tests
-        if: ${{ matrix.can-test }}
-        run: cargo test --verbose --workspace --locked --target ${{ matrix.target }} ${{ env.feature-set }}
       - name: Build
         run: cargo auditable build --verbose --workspace --locked --target ${{ matrix.target }} ${{ env.feature-set }}
       - name: Artifact

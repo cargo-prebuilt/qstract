@@ -95,7 +95,7 @@ jobs:
           name: ${{ needs.release.outputs.name }}
           allowUpdates: true
           prerelease: ${{ needs.release.outputs.prerelease }}
-          artifacts: "target-*/*.minisig,target-*/*.tar.gz,target-*/*.zip,hashes.sha256"
+          artifacts: "target-*/*.minisig,target-*/qstract-*,target-*/*.exe,hashes.sha256"
           body: ""
 
   check-fmt:
@@ -365,16 +365,16 @@ jobs:
         if: ${{ matrix.can-test }}
         run: |
           BIN_LOC="./target/${{ matrix.target }}/release/${{ env.bin-name }}" ./test/_test.sh
-      - name: Tar
-        run: tar czvf ${{ matrix.target }}.tar.gz -C ./target/${{ matrix.target }}/release ${{ env.bin-name }}
+      - name: Rename
+        run: cp ./target/${{ matrix.target }}/release/${{ env.bin-name }} ./${{ env.bin-name }}-${{ matrix.target }}
       - name: Hash
-        run: echo "$(coreutils sha256sum ${{ matrix.target }}.tar.gz)" > ${{ matrix.target }}.sha256
+        run: echo "$(coreutils sha256sum ./${{ env.bin-name }}-${{ matrix.target }})" > ${{ matrix.target }}.sha256
       - name: Artifact
         uses: actions/upload-artifact@v4
         with:
           name: target-${{ matrix.target }}
           path: |
-            ${{ matrix.target }}.tar.gz
+            ${{ env.bin-name }}-${{ matrix.target }}
             ${{ matrix.target }}.sha256
 
   cross:
@@ -406,16 +406,16 @@ jobs:
         if: ${{ env.cache == 'true' }}
       - name: Build
         run: cross build --verbose --workspace --release --locked --target ${{ matrix.target }} ${{ env.feature-set }}
-      - name: Tar
-        run: tar czvf ${{ matrix.target }}.tar.gz -C ./target/${{ matrix.target }}/release ${{ env.bin-name }}
+      - name: Rename
+        run: cp ./target/${{ matrix.target }}/release/${{ env.bin-name }} ./${{ env.bin-name }}-${{ matrix.target }}
       - name: Hash
-        run: echo "$(coreutils sha256sum ${{ matrix.target }}.tar.gz)" > ${{ matrix.target }}.sha256
+        run: echo "$(coreutils sha256sum ./${{ env.bin-name }}-${{ matrix.target }})" > ${{ matrix.target }}.sha256
       - name: Artifact
         uses: actions/upload-artifact@v4
         with:
           name: target-${{ matrix.target }}
           path: |
-            ${{ matrix.target }}.tar.gz
+            ${{ env.bin-name }}-${{ matrix.target }}
             ${{ matrix.target }}.sha256
 
   apple-darwin:
@@ -447,16 +447,16 @@ jobs:
         if: ${{ matrix.can-test }}
         run: |
           BIN_LOC="./target/${{ matrix.target }}/release/${{ env.bin-name }}" ./test/_test.sh
-      - name: Tar
-        run: tar czvf ${{ matrix.target }}.tar.gz -C ./target/${{ matrix.target }}/release ${{ env.bin-name }}
+      - name: Rename
+        run: cp ./target/${{ matrix.target }}/release/${{ env.bin-name }} ./${{ env.bin-name }}-${{ matrix.target }}
       - name: Hash
-        run: echo "$(coreutils sha256sum ${{ matrix.target }}.tar.gz)" > ${{ matrix.target }}.sha256
+        run: echo "$(coreutils sha256sum ./${{ env.bin-name }}-${{ matrix.target }})" > ${{ matrix.target }}.sha256
       - name: Artifact
         uses: actions/upload-artifact@v4
         with:
           name: target-${{ matrix.target }}
           path: |
-            ${{ matrix.target }}.tar.gz
+            ${{ env.bin-name }}-${{ matrix.target }}
             ${{ matrix.target }}.sha256
 
   pc-windows-msvc:
@@ -484,16 +484,14 @@ jobs:
         if: ${{ env.cache == 'true' }}
       - name: Build
         run: cargo auditable build --verbose --workspace --release --locked --target ${{ matrix.target }} ${{ env.feature-set }}
-      - name: Zip
-        run: |
-          cd target/${{ matrix.target }}/release
-          7z a -tzip ../../../${{ matrix.target }}.zip ${{ env.bin-name }}.exe
+      - name: Rename
+        run: cp ./target/${{ matrix.target }}/release/${{ env.bin-name }}.exe ./${{ env.bin-name }}-${{ matrix.target }}.exe
       - name: Hash
-        run: echo "$(coreutils sha256sum ${{ matrix.target }}.zip)" > ${{ matrix.target }}.sha256
+        run: echo "$(coreutils sha256sum ./${{ env.bin-name }}-${{ matrix.target }}.exe)" > ${{ matrix.target }}.sha256
       - name: Artifact
         uses: actions/upload-artifact@v4
         with:
           name: target-${{ matrix.target }}
           path: |
-            ${{ matrix.target }}.zip
+            ${{ env.bin-name }}-${{ matrix.target }}.exe
             ${{ matrix.target }}.sha256

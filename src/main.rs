@@ -1,6 +1,6 @@
 use flate2::bufread::GzDecoder;
+use rc_zip_sync::{rc_zip::parse::EntryKind, ReadZip};
 use std::{
-    env,
     fs::File,
     io::{BufReader, Read},
     path::PathBuf,
@@ -20,6 +20,7 @@ FLAGS:
 OPTIONS:
   -z           Extract gzip compressed file
   -C [DIR]     Extract to [DIR]
+  --zip       Extract zip compressed file (none, deflate, deflate64)
 
 ARGS:
   <FILE>       Tar file to extract
@@ -27,6 +28,7 @@ ARGS:
 
 struct Args {
     gzip: bool,
+    zip: bool,
     output: PathBuf,
     input: PathBuf,
 }
@@ -46,25 +48,66 @@ fn main() -> anyhow::Result<()> {
 
     let args = Args {
         gzip: pargs.contains("-z"),
+        zip: pargs.contains("--zip"),
         output: if let Some(p) =
             pargs.opt_value_from_os_str("-C", |s| Ok::<PathBuf, String>(PathBuf::from(s)))?
         {
             p
         }
         else {
-            env::current_dir()?
+            std::env::current_dir()?
         },
         input: pargs.free_from_os_str(|s| Ok::<PathBuf, String>(PathBuf::from(s)))?,
     };
 
+    if args.gzip && args.zip {
+        panic!("Cannot use gzip and zip at the same time.");
+    }
+
     let file = File::open(args.input)?;
     let file = BufReader::new(file);
 
-    let file: Box<dyn Read> =
+    let mut file: Box<dyn Read> =
         if args.gzip { Box::new(GzDecoder::new(file)) } else { Box::new(file) };
 
-    let mut archive = Archive::new(file);
-    archive.unpack(args.output)?;
+    if !args.zip {
+        let mut archive = Archive::new(file);
+        archive.unpack(args.output)?;
+    }
+    else {
+        unzip(&mut file, args.output)?;
+    }
+
+    Ok(())
+}
+
+fn unzip(read: &mut Box<dyn Read>, output: PathBuf) -> anyhow::Result<()> {
+    let mut bytes = Vec::new();
+    read.read_to_end(&mut bytes)?;
+    let reader = bytes.read_zip()?;
+
+    for entry in reader.entries() {
+        let name = match entry.sanitized_name() {
+            Some(name) => name,
+            None => continue,
+        };
+
+        match entry.kind() {
+            EntryKind::Directory => {
+                let path = output.join(name);
+                std::fs::create_dir_all(path.parent().expect("No parent path."))?;
+            }
+            EntryKind::File => {
+                let path = output.join(name);
+                std::fs::create_dir_all(path.parent().expect("No parent path."))?;
+
+                let mut w = File::create(path)?;
+                let mut r = entry.reader();
+                std::io::copy(&mut r, &mut w)?;
+            }
+            EntryKind::Symlink => eprintln!("Unsupported symlink, skipping {}", name),
+        }
+    }
 
     Ok(())
 }

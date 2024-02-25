@@ -84,11 +84,53 @@ function test_2 {
 function test_3 {
     $QSTRACT_BIN t3archive.tar
     b101_files ./ff
+    rm -rf ./ff
+}
+
+function test_4 {
+    $QSTRACT_BIN --zip ./zarchive1.zip -C ./t1
+    10_files ./t1
+    rm -rf ./t1
+
+    $QSTRACT_BIN ./zarchive1.zip -C ./ --zip
+    10_files ./
+    rm -rf *.txt
+
+    $QSTRACT_BIN -C ./t555/111 --zip ./zarchive1.zip
+    10_files ./t555/111
+    rm -rf ./t555
+}
+
+function test_5 {
+    $QSTRACT_BIN --zip ./7z-zarchive1.zip -C ./t1
+    10_files ./t1
+    rm -rf ./t1
+
+    $QSTRACT_BIN ./7z-zarchive1.zip -C ./ --zip
+    10_files ./
+    rm -rf *.txt
+
+    $QSTRACT_BIN -C ./t555/111 --zip ./7z-zarchive1.zip
+    10_files ./t555/111
+    rm -rf ./t555
+}
+
+function test_6 {
+    $QSTRACT_BIN --zip nocomp1.zip
+    b101_files ./ff
+    rm -rf ./ff
+
+    $QSTRACT_BIN --zip nocomp1.zip -C ./ttf
+    b101_files ./ttf/ff
+    rm -rf ./ttf/ff
 }
 
 test_1
 test_2
 test_3
+test_4
+test_5
+test_6
 
 popd
 rm -rf "$TEMP_DIR"

@@ -95,7 +95,7 @@ jobs:
           name: ${{ needs.release.outputs.name }}
           allowUpdates: true
           prerelease: ${{ needs.release.outputs.prerelease }}
-          artifacts: "target-*/*.minisig,target-*/qstract-*,target-*/*.exe,hashes.sha256"
+          artifacts: "target-*/qstract-*,hashes.sha256"
           body: ""
 
   check-fmt:

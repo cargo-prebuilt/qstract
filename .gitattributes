@@ -1,0 +1,7 @@
+* text=auto
+
+# Because scripts
+scripts/*.sh text eol=lf
+
+# Because of caching in GitHub Actions
+Cargo.lock text eol=lf

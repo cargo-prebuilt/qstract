@@ -367,6 +367,8 @@ jobs:
           BIN_LOC="./target/${{ matrix.target }}/release/${{ env.bin-name }}" ./test/_test.sh
       - name: Rename
         run: cp ./target/${{ matrix.target }}/release/${{ env.bin-name }} ./${{ env.bin-name }}-${{ matrix.target }}
+      - name: Chmod
+        run: chmod +x ./${{ env.bin-name }}-${{ matrix.target }}
       - name: Hash
         run: echo "$(coreutils sha256sum ./${{ env.bin-name }}-${{ matrix.target }})" > ${{ matrix.target }}.sha256
       - name: Artifact
@@ -408,6 +410,8 @@ jobs:
         run: cross build --verbose --workspace --release --locked --target ${{ matrix.target }} ${{ env.feature-set }}
       - name: Rename
         run: cp ./target/${{ matrix.target }}/release/${{ env.bin-name }} ./${{ env.bin-name }}-${{ matrix.target }}
+      - name: Chmod
+        run: chmod +x ./${{ env.bin-name }}-${{ matrix.target }}
       - name: Hash
         run: echo "$(coreutils sha256sum ./${{ env.bin-name }}-${{ matrix.target }})" > ${{ matrix.target }}.sha256
       - name: Artifact
@@ -449,6 +453,8 @@ jobs:
           BIN_LOC="./target/${{ matrix.target }}/release/${{ env.bin-name }}" ./test/_test.sh
       - name: Rename
         run: cp ./target/${{ matrix.target }}/release/${{ env.bin-name }} ./${{ env.bin-name }}-${{ matrix.target }}
+      - name: Chmod
+        run: chmod +x ./${{ env.bin-name }}-${{ matrix.target }}
       - name: Hash
         run: echo "$(coreutils sha256sum ./${{ env.bin-name }}-${{ matrix.target }})" > ${{ matrix.target }}.sha256
       - name: Artifact

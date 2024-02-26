@@ -20,7 +20,7 @@ A basic tar/zip extraction program.
 
 - `-C` for directory to extract to.
 - `-z` for gzip.
-- `--zip` for zip. (Only deflate and deflate64)
+- `--zip` for zip. (none, deflate, deflate64)
 
 First positional arg is the file to extract.
 

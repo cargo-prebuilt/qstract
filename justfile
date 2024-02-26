@@ -16,6 +16,7 @@ check:
     cargo +nightly fmt --check
     cargo clippy --all-targets --locked --workspace -- -D warnings
     cargo clippy --all-targets --locked --workspace --release -- -D warnings
+    cargo deny check
 
 docker:
     docker run -it --rm --pull=always \

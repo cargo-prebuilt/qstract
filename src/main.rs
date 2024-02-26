@@ -1,9 +1,12 @@
+#![forbid(unsafe_code)]
+#![allow(clippy::multiple_crate_versions)]
+
 use flate2::bufread::GzDecoder;
 use rc_zip_sync::{rc_zip::parse::EntryKind, ReadZip};
 use std::{
     fs::File,
     io::{BufReader, Read},
-    path::PathBuf,
+    path::{Path, PathBuf},
 };
 use tar::Archive;
 
@@ -60,9 +63,10 @@ fn main() -> anyhow::Result<()> {
         input: pargs.free_from_os_str(|s| Ok::<PathBuf, String>(PathBuf::from(s)))?,
     };
 
-    if args.gzip && args.zip {
-        panic!("Cannot use gzip and zip at the same time.");
-    }
+    assert!(
+        !(args.gzip && args.zip),
+        "Cannot use gzip and zip at the same time."
+    );
 
     let file = File::open(args.input)?;
     let file = BufReader::new(file);
@@ -70,26 +74,26 @@ fn main() -> anyhow::Result<()> {
     let mut file: Box<dyn Read> =
         if args.gzip { Box::new(GzDecoder::new(file)) } else { Box::new(file) };
 
-    if !args.zip {
-        let mut archive = Archive::new(file);
-        archive.unpack(args.output)?;
+    if args.zip {
+        unzip(&mut file, &args.output)?;
     }
     else {
-        unzip(&mut file, args.output)?;
+        let mut archive = Archive::new(file);
+        archive.unpack(args.output)?;
     }
 
     Ok(())
 }
 
-fn unzip(read: &mut Box<dyn Read>, output: PathBuf) -> anyhow::Result<()> {
+fn unzip(read: &mut Box<dyn Read>, output: &Path) -> anyhow::Result<()> {
     let mut bytes = Vec::new();
     read.read_to_end(&mut bytes)?;
     let reader = bytes.read_zip()?;
 
     for entry in reader.entries() {
-        let name = match entry.sanitized_name() {
-            Some(name) => name,
-            None => continue,
+        let Some(name) = entry.sanitized_name()
+        else {
+            continue;
         };
 
         match entry.kind() {
@@ -105,7 +109,7 @@ fn unzip(read: &mut Box<dyn Read>, output: PathBuf) -> anyhow::Result<()> {
                 let mut r = entry.reader();
                 std::io::copy(&mut r, &mut w)?;
             }
-            EntryKind::Symlink => eprintln!("Unsupported symlink, skipping {}", name),
+            EntryKind::Symlink => eprintln!("Unsupported symlink, skipping {name}"),
         }
     }
 

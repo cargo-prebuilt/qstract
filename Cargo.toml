@@ -7,6 +7,7 @@ description = "A basic tar/zip extraction program"
 readme = "README.md"
 license = "MIT"
 repository = "https://github.com/cargo-prebuilt/qstract"
+categories = ["command-line-utilities"]
 keywords = ["command-line-tool", "extract", "tar", "zip"]
 rust-version = "1.74"
 include = [
@@ -43,6 +44,17 @@ inherits = "release"
 opt-level = 0
 lto = false
 codegen-units = 16
+
+[lints.clippy]
+cargo = "deny"
+correctness = "deny"
+complexity = "deny"
+enum_glob_use = "deny"
+nursery = "deny"
+pedantic = "deny"
+perf = "deny"
+style = "deny"
+suspicious = "deny"
 
 [package.metadata.binstall]
 pkg-url = "{ repo }/releases/download/v{ version }/{ target }.tar.gz"

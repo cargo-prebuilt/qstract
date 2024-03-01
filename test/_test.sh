@@ -125,12 +125,37 @@ function test_6 {
     rm -rf ./ttf/ff
 }
 
+function test_7 {
+    $QSTRACT_BIN --sha256 ./tarchive1.tar.gz | grep 'dfd5fe115d931b6c4e4860391fc3984ab4ec5b6110851c0ef5a8641bd079f2c2' &>/dev/null
+    [ $? != 0 ] && exit 2
+
+    $QSTRACT_BIN ./tarchive1.tar.gz --sha512 | grep 'a73f29153d74694323e8d0bb82a910018a05ce011c73dfdca62b9fca3aafc218b92f2ff277a4b8006a919874527843d2ba0d56c0d5532487ac0a1d84421b5539' &>/dev/null
+    [ $? != 0 ] && exit 2
+
+    $QSTRACT_BIN ./tarchive1.tar.gz --sha3_256 | grep '60e99497952e17852d63c843606a214945550ccbb6777db25f7405fb39b55025' &>/dev/null
+    [ $? != 0 ] && exit 2
+
+    $QSTRACT_BIN --sha3_512 ./tarchive1.tar.gz | grep '2b292cf7c24d023e5f4b836ff36640b1a6b40d94382feab658b7c5ac5aa65ba7bdad2756e2c1c3077dd446b4474bdad72e96a030d0a291408482ac668246e4a' &>/dev/null
+    [ $? != 0 ] && exit 2
+
+    if [ "$($QSTRACT_BIN --sha512 -z ./e1.tar)" ]; then
+        exit 1
+    fi
+
+    if [ "$($QSTRACT_BIN --sha256 --sha512 ./e1.tar)" ]; then
+        exit 1
+    fi
+}
+
 test_1
 test_2
 test_3
 test_4
 test_5
 test_6
+
+# TODO: Test hashing
+test_7
 
 popd
 rm -rf "$TEMP_DIR"

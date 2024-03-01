@@ -32,3 +32,11 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run install script
         run: TARGET_STRING=aarch64-apple-darwin ./scripts/install-qstract.sh
+
+  test-install-script-4:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run install script
+        run: INSTALL_PATH=/usr/local/bin LIBC=musl ./scripts/install-qstract.sh
+      - run: qstract --sha256 ./test/zarchive.zip

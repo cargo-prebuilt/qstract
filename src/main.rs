@@ -77,6 +77,12 @@ fn main() -> anyhow::Result<()> {
         input: pargs.free_from_os_str(|s| Ok::<PathBuf, String>(PathBuf::from(s)))?,
     };
 
+    let remaining = pargs.finish();
+    assert!(
+        remaining.is_empty(),
+        "Unused arguments left: {remaining:?}.\nUse --help to see supported arguments."
+    );
+
     if [
         &args.gzip,
         &args.zip,

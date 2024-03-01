@@ -145,6 +145,10 @@ function test_7 {
     if [ "$($QSTRACT_BIN --sha256 --sha512 ./e1.tar)" ]; then
         exit 1
     fi
+
+    if [ "$($QSTRACT_BIN --wrong ./e1.tar)" ]; then
+        exit 1
+    fi
 }
 
 test_1

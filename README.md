@@ -21,8 +21,12 @@ A basic tar/zip extraction program.
 - `-C` for directory to extract to.
 - `-z` for gzip.
 - `--zip` for zip. (none, deflate, deflate64)
+- `--sha256` for sha256 hash.
+- `--sha512` for sha512 hash.
+- `--sha3_256` for sha3_256 hash.
+- `--sha3_512` for sha3_512 hash.
 
-First positional arg is the file to extract.
+First positional arg is the file to extract/hash.
 
 ### Examples
 

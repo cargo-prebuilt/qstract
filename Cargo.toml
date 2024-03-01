@@ -24,8 +24,11 @@ include = [
 [dependencies]
 anyhow = "1.0.80"
 flate2 = "1.0.28"
+hex = "0.4.3"
 pico-args = { version = "0.5.0", features = ["eq-separator"] }
 rc-zip-sync = { version = "4.0.0", default-features = false, features = ["deflate", "deflate64"] }
+sha2 = "0.10.8"
+sha3 = "0.10.8"
 tar = "0.4.40"
 
 [profile.release]
@@ -49,7 +52,6 @@ codegen-units = 16
 cargo = "deny"
 correctness = "deny"
 complexity = "deny"
-enum_glob_use = "deny"
 nursery = "deny"
 pedantic = "deny"
 perf = "deny"

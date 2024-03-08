@@ -42,6 +42,10 @@ panic = "abort"
 inherits = "release"
 opt-level = "s"
 
+[profile.zmall]
+inherits = "release"
+opt-level = "z"
+
 [profile.quick-build]
 inherits = "release"
 opt-level = 0

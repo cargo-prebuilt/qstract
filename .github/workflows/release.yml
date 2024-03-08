@@ -395,7 +395,7 @@ jobs:
       - name: Update Rust and add target
         run: |
           rustup toolchain install nightly
-          rustc +nightly--version
+          rustc +nightly --version
           rustup component add rust-src --toolchain nightly
           rustup target add ${{ matrix.target }} --toolchain nightly
       - uses: cargo-prebuilt/cargo-prebuilt-action@v3
@@ -439,7 +439,7 @@ jobs:
       - name: Update Rust and add target
         run: |
           rustup toolchain install nightly
-          rustc +nightly--version
+          rustc +nightly --version
           rustup component add rust-src --toolchain nightly
           rustup target add ${{ matrix.target }} --toolchain nightly
       - uses: cargo-prebuilt/cargo-prebuilt-action@v3

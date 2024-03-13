@@ -22,11 +22,11 @@ include = [
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-anyhow = "1.0.80"
+anyhow = "1.0.81"
 flate2 = "1.0.28"
 hex = "0.4.3"
 pico-args = { version = "0.5.0", features = ["eq-separator"] }
-rc-zip-sync = { version = "4.0.0", default-features = false, features = ["deflate", "deflate64"] }
+rc-zip-sync = { version = "4.0.1", default-features = false, features = ["deflate", "deflate64"] }
 sha2 = "0.10.8"
 sha3 = "0.10.8"
 tar = "0.4.40"
@@ -37,6 +37,7 @@ lto = true
 codegen-units = 1
 strip = true
 panic = "abort"
+split-debuginfo = "off"
 
 [profile.small]
 inherits = "release"

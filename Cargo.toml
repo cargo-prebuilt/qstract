@@ -1,6 +1,6 @@
 [package]
 name = "qstract"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 authors = ["harmless-tech"]
 description = "A basic tar/zip extraction program"
@@ -22,11 +22,11 @@ include = [
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-anyhow = "1.0.80"
+anyhow = "1.0.81"
 flate2 = "1.0.28"
 hex = "0.4.3"
 pico-args = { version = "0.5.0", features = ["eq-separator"] }
-rc-zip-sync = { version = "4.0.0", default-features = false, features = ["deflate", "deflate64"] }
+rc-zip-sync = { version = "4.1.0", default-features = false, features = ["deflate", "deflate64"] }
 sha2 = "0.10.8"
 sha3 = "0.10.8"
 tar = "0.4.40"
@@ -38,10 +38,15 @@ codegen-units = 1
 debug = false
 strip = true
 panic = "abort"
+split-debuginfo = "off"
 
 [profile.small]
 inherits = "release"
 opt-level = "s"
+
+[profile.zmall]
+inherits = "release"
+opt-level = "z"
 
 [profile.quick-build]
 inherits = "release"

@@ -24,6 +24,11 @@ check-nightly:
     cargo +nightly clippy --all-targets --locked --workspace --release -- -D warnings
     cargo +nightly deny check
 
+nbuild:
+    cargo +nightly build -Z build-std=std,panic_abort --target aarch64-apple-darwin --release
+    cargo +nightly build -Z build-std=std,panic_abort --target aarch64-apple-darwin --profile=small
+    cargo +nightly build -Z build-std=std,panic_abort --target aarch64-apple-darwin --profile=zmall
+
 docker:
     docker run -it --rm --pull=always \
     -e CARGO_TARGET_DIR=/ptarget \

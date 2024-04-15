@@ -32,7 +32,7 @@ jobs:
 #  publish-crates-io:
 #    if: ${{ ! contains(github.ref, '-dev') }}
 #    runs-on: ubuntu-latest
-#    needs: [ release, check-fmt, clippy, ink-cross, cross, apple-darwin, pc-windows-msvc ]
+#    needs: [ release, check-fmt, clippy, ink-cross, apple-darwin, pc-windows-msvc ]
 #    steps:
 #      - uses: actions/checkout@v4
 #      - name: Update Rust
@@ -46,7 +46,7 @@ jobs:
 
   publish-github-releases:
     runs-on: ubuntu-latest
-    needs: [ release, check-fmt, clippy, ink-cross, cross, apple-darwin, pc-windows-msvc ]
+    needs: [ release, check-fmt, clippy, ink-cross, apple-darwin, pc-windows-msvc ]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -336,6 +336,8 @@ jobs:
             can-test: false
           - target: powerpc64le-unknown-linux-gnu
             can-test: false
+          - target: powerpc64-unknown-linux-gnu
+            can-test: false
           - target: riscv64gc-unknown-linux-gnu
             can-test: false
           - target: s390x-unknown-linux-gnu
@@ -344,6 +346,10 @@ jobs:
             can-test: true
           - target: x86_64-unknown-linux-musl
             can-test: true
+          - target: x86_64-unknown-freebsd
+            can-test: false
+          - target: x86_64-unknown-netbsd
+            can-test: false
     runs-on: ubuntu-latest
     needs: [ check-fmt, clippy, cargo-hack, cargo-msrv, cargo-deny ]
     steps:
@@ -365,49 +371,6 @@ jobs:
         if: ${{ matrix.can-test }}
         run: |
           BIN_LOC="./target/${{ matrix.target }}/release/${{ env.bin-name }}" ./test/_test.sh
-      - name: Rename
-        run: cp ./target/${{ matrix.target }}/release/${{ env.bin-name }} ./${{ env.bin-name }}-${{ matrix.target }}
-      - name: Chmod
-        run: chmod +x ./${{ env.bin-name }}-${{ matrix.target }}
-      - name: Hash
-        run: echo "$(coreutils sha256sum ./${{ env.bin-name }}-${{ matrix.target }})" > ${{ matrix.target }}.sha256
-      - name: Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: target-${{ matrix.target }}
-          path: |
-            ${{ env.bin-name }}-${{ matrix.target }}
-            ${{ matrix.target }}.sha256
-
-  cross:
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - target: x86_64-unknown-freebsd
-            can-test: false
-          - target: x86_64-unknown-netbsd
-            can-test: false
-          - target: x86_64-unknown-illumos
-            can-test: false
-          - target: powerpc64-unknown-linux-gnu
-            can-test: true
-    runs-on: ubuntu-latest
-    needs: [ check-fmt, clippy, cargo-hack, cargo-msrv, cargo-deny ]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Update Rust and add target
-        run: |
-          rustup update
-          rustc --version
-          rustup target add ${{ matrix.target }}
-      - uses: cargo-prebuilt/cargo-prebuilt-action@v3
-        with:
-          pkgs: cross,coreutils
-      - uses: Swatinem/rust-cache@v2
-        if: ${{ env.cache == 'true' }}
-      - name: Build
-        run: cross build --verbose --workspace --release --locked --target ${{ matrix.target }} ${{ env.feature-set }}
       - name: Rename
         run: cp ./target/${{ matrix.target }}/release/${{ env.bin-name }} ./${{ env.bin-name }}-${{ matrix.target }}
       - name: Chmod

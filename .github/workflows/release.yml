@@ -147,8 +147,8 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          cargo clippy --all-targets --verbose --workspace --release --locked -- -D warnings 2>&1 | tee .step-data.txt
-          cargo clippy --all-targets --verbose --workspace --release --locked ${{ env.feature-set }} -- -D warnings 2>&1 | tee .step-data.txt
+          cargo clippy --all-targets --verbose --workspace --profile=zmall --locked -- -D warnings 2>&1 | tee .step-data.txt
+          cargo clippy --all-targets --verbose --workspace --profile=zmall --locked ${{ env.feature-set }} -- -D warnings 2>&1 | tee .step-data.txt
       - name: Put into summary (success)
         if: success()
         shell: bash
@@ -191,12 +191,12 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          cargo hack check --each-feature --no-dev-deps --verbose --workspace --release --locked 2>&1 | tee .step-data.txt
+          cargo hack check --each-feature --no-dev-deps --verbose --workspace --profile=zmall --locked 2>&1 | tee .step-data.txt
       - name: Hack Check (feature-powerset)
         shell: bash
         run: |
           set -o pipefail
-          cargo hack check --feature-powerset ${{ env.hack-group }} --no-dev-deps --verbose --workspace --release --locked 2>&1 | tee .step-data.txt
+          cargo hack check --feature-powerset ${{ env.hack-group }} --no-dev-deps --verbose --workspace --profile=zmall --locked 2>&1 | tee .step-data.txt
       - name: Put into summary (success)
         if: success()
         shell: bash
@@ -241,7 +241,7 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          cargo msrv verify -- cargo check --verbose --release --locked 2>&1 | tee .step-data.txt
+          cargo msrv verify -- cargo check --verbose --profile=zmall --locked 2>&1 | tee .step-data.txt
       - name: Put into summary (success)
         if: success()
         shell: bash
@@ -365,8 +365,8 @@ jobs:
           --userns host --user $(id -u):$(id -g) \
           -v $HOME/.cargo/registry:/usr/local/cargo/registry \
           -v ./:/project \
-          ghcr.io/cargo-prebuilt/ink-cross:stable-${{ matrix.target }} \
-          auditable build --verbose --workspace --release --locked --target ${{ matrix.target }} ${{ env.feature-set }}
+          ghcr.io/cargo-prebuilt/ink-cross:nightly-${{ matrix.target }} \
+          auditable build --verbose --workspace --profile=zmall --locked --target ${{ matrix.target }} ${{ env.feature-set }}
       - name: Run tests
         if: ${{ matrix.can-test }}
         run: |
@@ -401,15 +401,17 @@ jobs:
       - name: Update Rust and add target
         run: |
           rustup update
-          rustc --version
-          rustup target add ${{ matrix.target }}
+          rustup toolchain install nightly
+          rustc +nightly --version
+          rustup component add rust-src --toolchain nightly
+          rustup target add ${{ matrix.target }} --toolchain nightly
       - uses: cargo-prebuilt/cargo-prebuilt-action@v3
         with:
           pkgs: cargo-auditable,coreutils
       - uses: Swatinem/rust-cache@v2
         if: ${{ env.cache == 'true' }}
       - name: Build
-        run: cargo auditable build --verbose --workspace --release --locked --target ${{ matrix.target }} ${{ env.feature-set }}
+        run: cargo auditable build --verbose --workspace --profile=zmall --locked --target ${{ matrix.target }} ${{ env.feature-set }}
       - name: Run tests
         if: ${{ matrix.can-test }}
         run: |
@@ -444,15 +446,17 @@ jobs:
       - name: Update Rust and add target
         run: |
           rustup update
-          rustc --version
-          rustup target add ${{ matrix.target }}
+          rustup toolchain install nightly
+          rustc +nightly --version
+          rustup component add rust-src --toolchain nightly
+          rustup target add ${{ matrix.target }} --toolchain nightly
       - uses: cargo-prebuilt/cargo-prebuilt-action@v3
         with:
           pkgs: cargo-auditable,coreutils
       - uses: Swatinem/rust-cache@v2
         if: ${{ env.cache == 'true' }}
       - name: Build
-        run: cargo auditable build --verbose --workspace --release --locked --target ${{ matrix.target }} ${{ env.feature-set }}
+        run: cargo auditable build --verbose --workspace --profile=zmall --locked --target ${{ matrix.target }} ${{ env.feature-set }}
       - name: Rename
         run: cp ./target/${{ matrix.target }}/release/${{ env.bin-name }}.exe ./${{ env.bin-name }}-${{ matrix.target }}.exe
       - name: Hash

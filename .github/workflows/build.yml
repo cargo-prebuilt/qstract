@@ -12,7 +12,7 @@ on:
 
 env:
   bin-name: qstract
-  feature-set: ''
+  feature-set: '-Z build-std=std,panic_abort'
   CARGO_TERM_COLOR: always
 
 jobs:
@@ -57,7 +57,7 @@ jobs:
           --userns host --user $(id -u):$(id -g) \
           -v $HOME/.cargo/registry:/usr/local/cargo/registry \
           -v ./:/project \
-          ghcr.io/cargo-prebuilt/ink-cross:stable-${{ matrix.target }} \
+          ghcr.io/cargo-prebuilt/ink-cross:nightly-${{ matrix.target }} \
           auditable build --verbose --workspace --locked --target ${{ matrix.target }} ${{ env.feature-set }}
       - name: Run tests
         if: ${{ matrix.can-test }}
@@ -87,8 +87,10 @@ jobs:
       - name: Update Rust and add target
         run: |
           rustup update
-          rustc --version
-          rustup target add ${{ matrix.target }}
+          rustup toolchain install nightly
+          rustc +nightly --version
+          rustup component add rust-src --toolchain nightly
+          rustup target add ${{ matrix.target }} --toolchain nightly
       - uses: cargo-prebuilt/cargo-prebuilt-action@v3
         with:
           pkgs: cargo-auditable
@@ -123,8 +125,10 @@ jobs:
       - name: Update Rust and add target
         run: |
           rustup update
-          rustc --version
-          rustup target add ${{ matrix.target }}
+          rustup toolchain install nightly
+          rustc +nightly --version
+          rustup component add rust-src --toolchain nightly
+          rustup target add ${{ matrix.target }} --toolchain nightly
       - uses: cargo-prebuilt/cargo-prebuilt-action@v3
         with:
           pkgs: cargo-auditable

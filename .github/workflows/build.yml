@@ -12,7 +12,7 @@ on:
 
 env:
   bin-name: qstract
-  feature-set: '-Z build-std=std,panic_abort'
+  feature-set: ''
   CARGO_TERM_COLOR: always
 
 jobs:
@@ -98,7 +98,7 @@ jobs:
         with:
           key: ${{ matrix.target }}
       - name: Build
-        run: cargo auditable build --verbose --workspace --locked --target ${{ matrix.target }} ${{ env.feature-set }}
+        run: cargo +nightly auditable build --verbose --workspace --locked --target ${{ matrix.target }} ${{ env.feature-set }}
       - name: Run tests
         if: ${{ matrix.can-test }}
         run: |
@@ -136,7 +136,7 @@ jobs:
         with:
           key: ${{ matrix.target }}
       - name: Build
-        run: cargo auditable build --verbose --workspace --locked --target ${{ matrix.target }} ${{ env.feature-set }}
+        run: cargo +nightly auditable build --verbose --workspace --locked --target ${{ matrix.target }} ${{ env.feature-set }}
       - name: Artifact
         uses: actions/upload-artifact@v4
         with:

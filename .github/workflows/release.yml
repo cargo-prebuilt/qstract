@@ -411,7 +411,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         if: ${{ env.cache == 'true' }}
       - name: Build
-        run: cargo auditable build --verbose --workspace --profile=zmall --locked --target ${{ matrix.target }} ${{ env.feature-set }}
+        run: cargo +nightly auditable build --verbose --workspace --profile=zmall --locked --target ${{ matrix.target }} ${{ env.feature-set }}
       - name: Run tests
         if: ${{ matrix.can-test }}
         run: |
@@ -456,7 +456,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         if: ${{ env.cache == 'true' }}
       - name: Build
-        run: cargo auditable build --verbose --workspace --profile=zmall --locked --target ${{ matrix.target }} ${{ env.feature-set }}
+        run: cargo +nightly auditable build --verbose --workspace --profile=zmall --locked --target ${{ matrix.target }} ${{ env.feature-set }}
       - name: Rename
         run: cp ./target/${{ matrix.target }}/release/${{ env.bin-name }}.exe ./${{ env.bin-name }}-${{ matrix.target }}.exe
       - name: Hash

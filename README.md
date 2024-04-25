@@ -4,7 +4,7 @@
 [![Rust Checks](https://github.com/cargo-prebuilt/qstract/actions/workflows/checks.yml/badge.svg?event=push)](https://github.com/cargo-prebuilt/qstract/actions/workflows/checks.yml)
 [![rustc-msrv](https://img.shields.io/badge/rustc-1.74%2B-blue?logo=rust)](https://www.rust-lang.org/tools/install)
 
-A basic tar/zip extraction program.
+A very basic tar/zip extraction program.
 
 ## Installation
 

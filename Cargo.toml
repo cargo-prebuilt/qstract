@@ -3,7 +3,7 @@ name = "qstract"
 version = "0.2.2"
 edition = "2021"
 authors = ["harmless-tech"]
-description = "A basic tar/zip extraction program"
+description = "A very basic tar/zip extraction program"
 readme = "README.md"
 license = "MIT"
 repository = "https://github.com/cargo-prebuilt/qstract"
@@ -28,6 +28,9 @@ rc-zip-sync = { version = "4.1.0", default-features = false, features = ["deflat
 sha2 = "0.10.8"
 sha3 = "0.10.8"
 tar = "0.4.40"
+
+[profile.dev]
+panic = "abort"
 
 [profile.release]
 opt-level = 3

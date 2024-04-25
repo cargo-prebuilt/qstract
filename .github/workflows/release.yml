@@ -370,9 +370,9 @@ jobs:
       - name: Run tests
         if: ${{ matrix.can-test }}
         run: |
-          BIN_LOC="./target/${{ matrix.target }}/release/${{ env.bin-name }}" ./test/_test.sh
+          BIN_LOC="./target/${{ matrix.target }}/zmall/${{ env.bin-name }}" ./test/_test.sh
       - name: Rename
-        run: cp ./target/${{ matrix.target }}/release/${{ env.bin-name }} ./${{ env.bin-name }}-${{ matrix.target }}
+        run: cp ./target/${{ matrix.target }}/zmall/${{ env.bin-name }} ./${{ env.bin-name }}-${{ matrix.target }}
       - name: Chmod
         run: chmod +x ./${{ env.bin-name }}-${{ matrix.target }}
       - name: Hash
@@ -415,9 +415,9 @@ jobs:
       - name: Run tests
         if: ${{ matrix.can-test }}
         run: |
-          BIN_LOC="./target/${{ matrix.target }}/release/${{ env.bin-name }}" ./test/_test.sh
+          BIN_LOC="./target/${{ matrix.target }}/zmall/${{ env.bin-name }}" ./test/_test.sh
       - name: Rename
-        run: cp ./target/${{ matrix.target }}/release/${{ env.bin-name }} ./${{ env.bin-name }}-${{ matrix.target }}
+        run: cp ./target/${{ matrix.target }}/zmall/${{ env.bin-name }} ./${{ env.bin-name }}-${{ matrix.target }}
       - name: Chmod
         run: chmod +x ./${{ env.bin-name }}-${{ matrix.target }}
       - name: Hash
@@ -458,7 +458,7 @@ jobs:
       - name: Build
         run: cargo +nightly auditable build --verbose --workspace --profile=zmall --locked --target ${{ matrix.target }} ${{ env.feature-set }}
       - name: Rename
-        run: cp ./target/${{ matrix.target }}/release/${{ env.bin-name }}.exe ./${{ env.bin-name }}-${{ matrix.target }}.exe
+        run: cp ./target/${{ matrix.target }}/zmall/${{ env.bin-name }}.exe ./${{ env.bin-name }}-${{ matrix.target }}.exe
       - name: Hash
         run: echo "$(coreutils sha256sum ./${{ env.bin-name }}-${{ matrix.target }}.exe)" > ${{ matrix.target }}.sha256
       - name: Artifact

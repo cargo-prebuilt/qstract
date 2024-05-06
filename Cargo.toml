@@ -20,8 +20,8 @@ include = [
 ]
 
 [dependencies]
-anyhow = "1.0.82"
-flate2 = "1.0.28"
+anyhow = "1.0.83"
+flate2 = "1.0.30"
 hex = "0.4.3"
 pico-args = { version = "0.5.0", features = ["eq-separator"] }
 rc-zip-sync = { version = "4.1.0", default-features = false, features = ["deflate", "deflate64"] }

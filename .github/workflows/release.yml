@@ -7,6 +7,11 @@ on:
       - "v**"
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  attestations: write
+  contents: write
+
 env:
   bin-name: qstract
   feature-set: ''
@@ -375,6 +380,9 @@ jobs:
         run: cp ./target/${{ matrix.target }}/zmall/${{ env.bin-name }} ./${{ env.bin-name }}-${{ matrix.target }}
       - name: Chmod
         run: chmod +x ./${{ env.bin-name }}-${{ matrix.target }}
+      - uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: ./${{ env.bin-name }}-${{ matrix.target }}
       - name: Hash
         run: echo "$(coreutils sha256sum ./${{ env.bin-name }}-${{ matrix.target }})" > ${{ matrix.target }}.sha256
       - name: Artifact
@@ -420,6 +428,9 @@ jobs:
         run: cp ./target/${{ matrix.target }}/zmall/${{ env.bin-name }} ./${{ env.bin-name }}-${{ matrix.target }}
       - name: Chmod
         run: chmod +x ./${{ env.bin-name }}-${{ matrix.target }}
+      - uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: ./${{ env.bin-name }}-${{ matrix.target }}
       - name: Hash
         run: echo "$(coreutils sha256sum ./${{ env.bin-name }}-${{ matrix.target }})" > ${{ matrix.target }}.sha256
       - name: Artifact
@@ -459,6 +470,9 @@ jobs:
         run: cargo +nightly auditable build --verbose --workspace --profile=zmall --locked --target ${{ matrix.target }} ${{ env.feature-set }}
       - name: Rename
         run: cp ./target/${{ matrix.target }}/zmall/${{ env.bin-name }}.exe ./${{ env.bin-name }}-${{ matrix.target }}.exe
+      - uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: ./${{ env.bin-name }}-${{ matrix.target }}.exe
       - name: Hash
         run: echo "$(coreutils sha256sum ./${{ env.bin-name }}-${{ matrix.target }}.exe)" > ${{ matrix.target }}.sha256
       - name: Artifact

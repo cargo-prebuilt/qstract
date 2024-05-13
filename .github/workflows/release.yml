@@ -224,8 +224,9 @@ jobs:
             os: ubuntu-latest
           - target: aarch64-apple-darwin
             os: macos-14
-          - target: x86_64-pc-windows-msvc
-            os: windows-latest
+          # Remove for now. GH actions doesn't like installing toolchains on windows.
+          # - target: x86_64-pc-windows-msvc
+          #   os: windows-latest
     env:
       CARGO_TERM_COLOR: never
     runs-on: ${{ matrix.os }}

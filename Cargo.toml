@@ -20,7 +20,7 @@ include = [
 ]
 
 [dependencies]
-anyhow = "1.0.83"
+anyhow = "1.0.86"
 flate2 = "1.0.30" # TODO: zlib?
 hex = "0.4.3"
 pico-args = { version = "0.5.0", features = ["eq-separator"] }

@@ -62,4 +62,4 @@ msrv:
     --mount type=bind,source=$HOME/.cargo/registry,target=/usr/local/cargo/registry \
     -w /project \
     rust:latest \
-    bash -c 'cargo install cargo-msrv --version 0.16.0-beta.20 --profile=dev && cargo msrv -- cargo check --verbose --locked'
+    bash -c 'cargo install cargo-msrv --version 0.16.0-beta.25 && cargo msrv find -- cargo check --verbose --locked'

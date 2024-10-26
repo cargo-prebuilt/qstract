@@ -134,7 +134,7 @@ jobs:
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
           - target: aarch64-apple-darwin
-            os: macos-14
+            os: macos-latest
           - target: x86_64-pc-windows-msvc
             os: windows-latest
     env:
@@ -175,7 +175,7 @@ jobs:
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
           - target: aarch64-apple-darwin
-            os: macos-14
+            os: macos-latest
           - target: x86_64-pc-windows-msvc
             os: windows-latest
     env:
@@ -223,7 +223,7 @@ jobs:
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
           - target: aarch64-apple-darwin
-            os: macos-14
+            os: macos-latest
           # Remove for now. GH actions doesn't like installing toolchains on windows.
           # - target: x86_64-pc-windows-msvc
           #   os: windows-latest
@@ -402,7 +402,7 @@ jobs:
           - target: x86_64-apple-darwin
             os: macos-13
           - target: aarch64-apple-darwin
-            os: macos-14
+            os: macos-latest
     runs-on: ${{ matrix.os }}
     needs: [ check-fmt, clippy, cargo-hack, cargo-msrv, cargo-deny ]
     steps:

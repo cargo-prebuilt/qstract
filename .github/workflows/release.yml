@@ -381,7 +381,7 @@ jobs:
         run: cp ./target/${{ matrix.target }}/zmall/${{ env.bin-name }} ./${{ env.bin-name }}-${{ matrix.target }}
       - name: Chmod
         run: chmod +x ./${{ env.bin-name }}-${{ matrix.target }}
-      - uses: actions/attest-build-provenance@v1
+      - uses: actions/attest-build-provenance@v2
         with:
           subject-path: ./${{ env.bin-name }}-${{ matrix.target }}
       - name: Hash
@@ -428,7 +428,7 @@ jobs:
         run: cp ./target/${{ matrix.target }}/zmall/${{ env.bin-name }} ./${{ env.bin-name }}-${{ matrix.target }}
       - name: Chmod
         run: chmod +x ./${{ env.bin-name }}-${{ matrix.target }}
-      - uses: actions/attest-build-provenance@v1
+      - uses: actions/attest-build-provenance@v2
         with:
           subject-path: ./${{ env.bin-name }}-${{ matrix.target }}
       - name: Hash
@@ -469,7 +469,7 @@ jobs:
         run: cargo +nightly auditable build --verbose --workspace --profile=zmall --locked --target ${{ matrix.target }} ${{ env.feature-set }}
       - name: Rename
         run: cp ./target/${{ matrix.target }}/zmall/${{ env.bin-name }}.exe ./${{ env.bin-name }}-${{ matrix.target }}.exe
-      - uses: actions/attest-build-provenance@v1
+      - uses: actions/attest-build-provenance@v2
         with:
           subject-path: ./${{ env.bin-name }}-${{ matrix.target }}.exe
       - name: Hash

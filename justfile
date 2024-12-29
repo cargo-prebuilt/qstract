@@ -26,7 +26,6 @@ check-nightly:
 
 docker:
     docker run -it --rm --pull=always \
-    -e CARGO_TARGET_DIR=/ptarget \
     --mount type=bind,source={{pwd}},target=/project \
     --mount type=bind,source=$HOME/.cargo/registry,target=/usr/local/cargo/registry \
     -w /project \
@@ -47,19 +46,18 @@ hack:
     -e CARGO_TARGET_DIR=/ptarget \
     --mount type=bind,source={{pwd}},target=/project \
     --mount type=bind,source=$HOME/.cargo/registry,target=/usr/local/cargo/registry \
-    -w /project \
-    rust:latest \
-    bash -c "curl --proto '=https' --tlsv1.2 -sSf \
-    https://raw.githubusercontent.com/cargo-prebuilt/cargo-prebuilt/main/scripts/install-cargo-prebuilt.sh | bash \
+    --entrypoint=/bin/bash \
+    ghcr.io/cargo-prebuilt/ink-cross-dev:stable-aarch64-unknown-linux-gnu \
+    -c 'cargo prebuilt --ci cargo-hack \
     && cargo prebuilt cargo-hack --ci \
     && cargo hack check --each-feature --no-dev-deps --verbose --workspace \
-    && cargo hack check --feature-powerset --no-dev-deps --verbose --workspace"
+    && cargo hack check --feature-powerset --no-dev-deps --verbose --workspace'
 
 msrv:
     docker run -t --rm --pull=always \
     -e CARGO_TARGET_DIR=/ptarget \
     --mount type=bind,source={{pwd}},target=/project \
     --mount type=bind,source=$HOME/.cargo/registry,target=/usr/local/cargo/registry \
-    -w /project \
-    rust:latest \
-    bash -c 'cargo install cargo-msrv && cargo msrv find -- cargo check --verbose --locked'
+    --entrypoint=/bin/bash \
+    ghcr.io/cargo-prebuilt/ink-cross-dev:stable-aarch64-unknown-linux-gnu \
+    -c 'cargo prebuilt --ci cargo-msrv && cargo msrv find -- cargo check --verbose --locked'

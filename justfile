@@ -28,9 +28,8 @@ docker:
     docker run -it --rm --pull=always \
     --mount type=bind,source={{pwd}},target=/project \
     --mount type=bind,source=$HOME/.cargo/registry,target=/usr/local/cargo/registry \
-    -w /project \
-    rust:latest \
-    bash
+    --entrypoint=/bin/bash \
+    ghcr.io/cargo-prebuilt/ink-cross-dev:stable-native
 
 docker-alpine:
     docker run -it --rm --pull=always \
@@ -47,7 +46,7 @@ hack:
     --mount type=bind,source={{pwd}},target=/project \
     --mount type=bind,source=$HOME/.cargo/registry,target=/usr/local/cargo/registry \
     --entrypoint=/bin/bash \
-    ghcr.io/cargo-prebuilt/ink-cross-dev:stable-aarch64-unknown-linux-gnu \
+    ghcr.io/cargo-prebuilt/ink-cross-dev:stable-native \
     -c 'cargo prebuilt --ci cargo-hack \
     && cargo prebuilt cargo-hack --ci \
     && cargo hack check --each-feature --no-dev-deps --verbose --workspace \
@@ -59,5 +58,5 @@ msrv:
     --mount type=bind,source={{pwd}},target=/project \
     --mount type=bind,source=$HOME/.cargo/registry,target=/usr/local/cargo/registry \
     --entrypoint=/bin/bash \
-    ghcr.io/cargo-prebuilt/ink-cross-dev:stable-aarch64-unknown-linux-gnu \
+    ghcr.io/cargo-prebuilt/ink-cross-dev:stable-native \
     -c 'cargo prebuilt --ci cargo-msrv && cargo msrv find -- cargo check --verbose --locked'

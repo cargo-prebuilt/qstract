@@ -2,7 +2,7 @@
 #![allow(clippy::multiple_crate_versions)]
 
 use flate2::bufread::GzDecoder;
-use rc_zip_sync::{rc_zip::parse::EntryKind, ReadZip};
+use rc_zip_sync::{ReadZip, rc_zip::parse::EntryKind};
 use std::{
     fs::File,
     io::{BufReader, Read},
@@ -70,8 +70,7 @@ fn main() -> anyhow::Result<()> {
             pargs.opt_value_from_os_str("-C", |s| Ok::<PathBuf, String>(PathBuf::from(s)))?
         {
             p
-        }
-        else {
+        } else {
             std::env::current_dir()?
         },
         input: pargs.free_from_os_str(|s| Ok::<PathBuf, String>(PathBuf::from(s)))?,
@@ -96,22 +95,25 @@ fn main() -> anyhow::Result<()> {
     .count()
         > 1
     {
-        panic!("Arguments -z, --zip, --sha256 --sha512, --sha3_256, --sha3_512 must be used independently of each other.");
+        panic!(
+            "Arguments -z, --zip, --sha256 --sha512, --sha3_256, --sha3_512 must be used independently of each other."
+        );
     }
 
     let file = File::open(args.input)?;
     let file = BufReader::new(file);
 
-    let mut file: Box<dyn Read> =
-        if args.gzip { Box::new(GzDecoder::new(file)) } else { Box::new(file) };
+    let mut file: Box<dyn Read> = if args.gzip {
+        Box::new(GzDecoder::new(file))
+    } else {
+        Box::new(file)
+    };
 
     if args.zip {
         unzip(&mut file, &args.output)?;
-    }
-    else if args.sha256 || args.sha512 || args.sha3_256 || args.sha3_512 {
+    } else if args.sha256 || args.sha512 || args.sha3_256 || args.sha3_512 {
         hash(&mut file, args.sha256, args.sha512, args.sha3_256)?;
-    }
-    else {
+    } else {
         let mut archive = Archive::new(file);
         archive.unpack(args.output)?;
     }
@@ -125,8 +127,7 @@ fn unzip(read: &mut Box<dyn Read>, output: &Path) -> anyhow::Result<()> {
     let reader = bytes.read_zip()?;
 
     for entry in reader.entries() {
-        let Some(name) = entry.sanitized_name()
-        else {
+        let Some(name) = entry.sanitized_name() else {
             continue;
         };
 
@@ -164,20 +165,17 @@ fn hash(
         let mut hasher = Sha256::new();
         hasher.update(bytes);
         hasher.finalize().to_vec()
-    }
-    else if sha512 {
+    } else if sha512 {
         use sha2::{Digest, Sha512};
         let mut hasher = Sha512::new();
         hasher.update(bytes);
         hasher.finalize().to_vec()
-    }
-    else if sha3_256 {
+    } else if sha3_256 {
         use sha3::{Digest, Sha3_256};
         let mut hasher = Sha3_256::new();
         hasher.update(bytes);
         hasher.finalize().to_vec()
-    }
-    else {
+    } else {
         use sha3::{Digest, Sha3_512};
         let mut hasher = Sha3_512::new();
         hasher.update(bytes);

@@ -36,14 +36,13 @@ jobs:
         rust-version: [ stable, nightly, 1.85 ] # Stable, Beta, Nightly, MSRV
         info:
           - os: macos-latest
-            target1: aarch64-apple-darwin
-            target2: x86_64-apple-darwin
+            target: aarch64-apple-darwin
+          - os: macos-latest
+            target: x86_64-apple-darwin
           - os: ubuntu-latest
-            target1: x86_64-unknown-linux-gnu
-            target2: i686-unknown-linux-gnu
+            target: x86_64-unknown-linux-gnu
           - os: windows-latest
-            target1: x86_64-pc-windows-msvc
-            target2: i686-pc-windows-msvc
+            target: x86_64-pc-windows-msvc
     runs-on: ${{ matrix.info.os }}
     steps:
       - uses: actions/checkout@v4
@@ -53,29 +52,20 @@ jobs:
         id: toolchain
         with:
           toolchain: ${{ matrix.rust-version }}
-          targets: ${{ matrix.info.target1 }},${{ matrix.info.target2 }}
+          targets: ${{ matrix.info.target }}
           components: rust-src
       - uses: Swatinem/rust-cache@v2
         with:
-          key: ${{ matrix.info.target1 }}+${{ matrix.info.target2 }}
-      - name: Build (1)
-        run: cargo +${{steps.toolchain.outputs.name}} build --verbose --workspace --target ${{ matrix.info.target1 }}
-      - name: Build (2)
-        run: cargo +${{steps.toolchain.outputs.name}} build --verbose --workspace --target ${{ matrix.info.target2 }}
-      - name: Artifact (1)
+          key: ${{ matrix.info.target }}
+      - name: Build
+        run: cargo +${{steps.toolchain.outputs.name}} build --verbose --workspace --target ${{ matrix.info.target }}
+      - name: Artifact
         if: ${{ matrix.rust-version == 'nightly' }}
         uses: actions/upload-artifact@v4
         with:
-          name: target-na-${{ matrix.target1 }}
+          name: target-na-${{ matrix.info.target }}
           path: |
-            target/${{ matrix.target1 }}/debug/${{ env.bin-name }}
-      - name: Artifact (2)
-        if: ${{ matrix.rust-version == 'nightly' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: target-na-${{ matrix.target2 }}
-          path: |
-            target/${{ matrix.target2 }}/debug/${{ env.bin-name }}
+            target/${{ matrix.info.target }}/debug/${{ env.bin-name }}
 
   build-ink-cross:
     strategy:
@@ -116,9 +106,9 @@ jobs:
         if: ${{ matrix.rust-version == 'nightly' }}
         uses: actions/upload-artifact@v4
         with:
-          name: target-ic-${{ matrix.target }}
+          name: target-ic-${{ matrix.info.target }}
           path: |
-            target/${{ matrix.target }}/debug/${{ env.bin-name }}
+            target/${{ matrix.info.target }}/debug/${{ env.bin-name }}
 
   test-all:
     strategy:
@@ -141,7 +131,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           key: test-all
-      - name: Buils
+      - name: Build
         run: RUST_BACKTRACE=1 cargo +${{steps.toolchain.outputs.name}} build --verbose --workspace --locked
       - name: Test
         run: ./test/_test.sh

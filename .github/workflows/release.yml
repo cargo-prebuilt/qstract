@@ -78,6 +78,7 @@ jobs:
             target: x86_64-apple-darwin
           - os: windows-latest
             target: x86_64-pc-windows-msvc
+            file_ext: .exe
     runs-on: ${{ matrix.info.os }}
     steps:
       - uses: actions/checkout@v4
@@ -92,21 +93,21 @@ jobs:
       - name: Build
         run: cargo +${{steps.toolchain.outputs.name}} build --verbose --workspace --profile=zmall --locked --target ${{ matrix.info.target }}
       - name: Rename
-        run: cp ./target/${{ matrix.info.target }}/zmall/${{ env.bin-name }} ./${{ env.bin-name }}-${{ matrix.info.target }}
+        run: cp ./target/${{ matrix.info.target }}/zmall/${{ env.bin-name }}${{ matrix.info.file_ext }} ./${{ env.bin-name }}-${{ matrix.info.target }}${{ matrix.info.file_ext }}
       - name: Chmod
         if: ${{ ! contains(matrix.info.target, 'windows') }}
         run: chmod +x ./${{ env.bin-name }}-${{ matrix.info.target }}
       - uses: actions/attest-build-provenance@v2
         with:
-          subject-path: ./${{ env.bin-name }}-${{ matrix.info.target }}
+          subject-path: ./${{ env.bin-name }}-${{ matrix.info.target }}${{ matrix.info.file_ext }}
       - name: Hash
-        run: coreutils sha256sum ./${{ env.bin-name }}-${{ matrix.info.target }} > ${{ matrix.info.target }}.sha256
+        run: coreutils sha256sum ./${{ env.bin-name }}-${{ matrix.info.target }}${{ matrix.info.file_ext }} > ${{ matrix.info.target }}.sha256
       - name: Artifact
         uses: actions/upload-artifact@v4
         with:
           name: target-${{ matrix.info.target }}
           path: |
-            ${{ env.bin-name }}-${{ matrix.info.target }}
+            ${{ env.bin-name }}-${{ matrix.info.target }}${{ matrix.info.file_ext }}
             ${{ matrix.info.target }}.sha256
 
   build-ink-cross:

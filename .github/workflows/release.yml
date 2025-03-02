@@ -84,6 +84,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - uses: cargo-prebuilt/cargo-prebuilt-action@v4
+        with:
+          pkgs: cargo-auditable,coreutils
       - uses: dtolnay/rust-toolchain@master
         id: toolchain
         with:
@@ -91,7 +94,7 @@ jobs:
           targets: ${{ matrix.info.target }}
           components: rust-src
       - name: Build
-        run: cargo +${{steps.toolchain.outputs.name}} build --verbose --workspace --profile=zmall --locked --target ${{ matrix.info.target }}
+        run: cargo +${{steps.toolchain.outputs.name}} auditable build --verbose --workspace --profile=zmall --locked --target ${{ matrix.info.target }}
       - name: Rename
         run: cp ./target/${{ matrix.info.target }}/zmall/${{ env.bin-name }}${{ matrix.info.file_ext }} ./${{ env.bin-name }}-${{ matrix.info.target }}${{ matrix.info.file_ext }}
       - name: Chmod
@@ -132,6 +135,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - uses: cargo-prebuilt/cargo-prebuilt-action@v4
+        with:
+          pkgs: coreutils
       - uses: Swatinem/rust-cache@v2
         with:
           key: ink-build-${{ matrix.info.target }}

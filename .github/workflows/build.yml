@@ -5,6 +5,7 @@ on:
     branches: [ main ]
     paths:
       - .github/workflows/build.yml
+      - .cargo/**
       - src/**
       - test/**
       - Cargo.lock
@@ -13,6 +14,7 @@ on:
     branches: [ main ]
     paths:
       - .github/workflows/build.yml
+      - .cargo/**
       - src/**
       - test/**
       - Cargo.lock
@@ -44,6 +46,9 @@ jobs:
           - os: windows-latest
             target: x86_64-pc-windows-msvc
             file_ext: .exe
+          - os: windows-latest
+            target: aarch64-pc-windows-msvc
+            file_ext: .exe
     runs-on: ${{ matrix.info.os }}
     steps:
       - uses: actions/checkout@v4
@@ -60,7 +65,7 @@ jobs:
           components: rust-src
       - uses: Swatinem/rust-cache@v2
         with:
-          key: ${{ matrix.info.target }}
+          key: ${{ matrix.rust-version }}-${{ matrix.info.target }}
       - name: Build
         run: cargo +${{steps.toolchain.outputs.name}} auditable build --verbose --workspace --locked --target ${{ matrix.info.target }}
       - name: Artifact
@@ -95,7 +100,7 @@ jobs:
           persist-credentials: false
       - uses: Swatinem/rust-cache@v2
         with:
-          key: ink-build-${{ matrix.info.target }}
+          key: ink-build-${{ matrix.rust-version }}-${{ matrix.info.target }}
       - name: Permission fix cargo registry
         run: mkdir -p "$HOME/.cargo/registry" && chown "$(id -u)":"$(id -g)" -R "$HOME/.cargo/registry"
       - name: Build with ink cross

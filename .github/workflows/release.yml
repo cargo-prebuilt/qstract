@@ -79,6 +79,9 @@ jobs:
           - os: windows-latest
             target: x86_64-pc-windows-msvc
             file_ext: .exe
+          - os: windows-latest
+            target: aarch64-pc-windows-msvc
+            file_ext: .exe
     runs-on: ${{ matrix.info.os }}
     steps:
       - uses: actions/checkout@v4
@@ -138,9 +141,6 @@ jobs:
       - uses: cargo-prebuilt/cargo-prebuilt-action@v4
         with:
           pkgs: coreutils
-      - uses: Swatinem/rust-cache@v2
-        with:
-          key: ink-build-${{ matrix.info.target }}
       - name: Build with ink cross
         run: |
           docker run --rm \

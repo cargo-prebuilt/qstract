@@ -27,8 +27,57 @@ check-msvc:
 build:
     cargo build --locked
 
+buildr:
+    cargo build --locked --release
+
 build-msvc:
     cargo xwin build --locked --target aarch64-pc-windows-msvc
+
+buildr-msvc:
+    cargo xwin build --locked --release --target aarch64-pc-windows-msvc
+
+run +ARGS:
+    cargo run --locked -- {{ARGS}}
+
+runr +ARGS:
+    cargo run --locked --release -- {{ARGS}}
+
+runq +ARGS:
+    cargo run --locked --profile=quick -- {{ARGS}}
+
+ink-cross TARGET:
+    docker run -it --rm --pull=always \
+    -e CARGO_TARGET_DIR=/ptarget \
+    --mount type=bind,source={{pwd}},target=/project \
+    --mount type=bind,source=$HOME/.cargo/registry,target=/usr/local/cargo/registry \
+    ghcr.io/cargo-prebuilt/ink-cross:stable-{{TARGET}} \
+    build --verbose --workspace --locked --target {{TARGET}}
+
+ink-crossr TARGET:
+    docker run -it --rm --pull=always \
+    -e CARGO_TARGET_DIR=/ptarget \
+    --mount type=bind,source={{pwd}},target=/project \
+    --mount type=bind,source=$HOME/.cargo/registry,target=/usr/local/cargo/registry \
+    ghcr.io/cargo-prebuilt/ink-cross:stable-{{TARGET}} \
+    build --verbose --workspace --locked --release --target {{TARGET}}
+
+default_log_level := 'INFO'
+sup-lint LOG_LEVEL=default_log_level:
+    docker run \
+    -t --rm --pull=always \
+    --platform=linux/amd64 \
+    -e LOG_LEVEL={{LOG_LEVEL}} \
+    -e RUN_LOCAL=true \
+    -e SHELL=/bin/bash \
+    -e DEFAULT_BRANCH=main \
+    -e VALIDATE_ALL_CODEBASE=true \
+    -e VALIDATE_JSCPD=false \
+    -e VALIDATE_RUST_2015=false \
+    -e VALIDATE_RUST_2018=false \
+    -e VALIDATE_RUST_2021=false \
+    -e VALIDATE_RUST_CLIPPY=false \
+    -v {{pwd}}:/tmp/lint \
+    ghcr.io/super-linter/super-linter:slim-latest
 
 docker:
     docker run -it --rm --pull=always \

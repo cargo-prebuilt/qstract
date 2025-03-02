@@ -48,6 +48,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - uses: cargo-prebuilt/cargo-prebuilt-action@v4
+        with:
+          pkgs: cargo-auditable
       - uses: dtolnay/rust-toolchain@master
         id: toolchain
         with:
@@ -58,7 +61,7 @@ jobs:
         with:
           key: ${{ matrix.info.target }}
       - name: Build
-        run: cargo +${{steps.toolchain.outputs.name}} build --verbose --workspace --target ${{ matrix.info.target }}
+        run: cargo +${{steps.toolchain.outputs.name}} auditable build --verbose --workspace --locked --target ${{ matrix.info.target }}
       - name: Artifact
         if: ${{ matrix.rust-version == 'nightly' }}
         uses: actions/upload-artifact@v4
@@ -101,7 +104,7 @@ jobs:
           -v "$HOME/.cargo/registry:/usr/local/cargo/registry" \
           -v ./:/project \
           ghcr.io/cargo-prebuilt/ink-cross:${{ matrix.rust-version }}-${{ matrix.info.target }} \
-          build --verbose --workspace --target ${{ matrix.info.target }}
+          auditable build --verbose --workspace --locked --target ${{ matrix.info.target }}
       - name: Artifact
         if: ${{ matrix.rust-version == 'nightly' }}
         uses: actions/upload-artifact@v4

@@ -16,9 +16,9 @@ checksum = "512761e0bb2578dd7380c6baaa0f4ce03e84f95e960231d1dec8bf4d7d6e2627"
 
 [[package]]
 name = "anyhow"
-version = "1.0.96"
+version = "1.0.97"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6b964d184e89d9b6b67dd2715bc8e74cf3107fb2b529990c90cf517326150bf4"
+checksum = "dcfed56ad506cb2c684a14971b8861fdc3baaaae314b9e5f9bb532cbe3ba7a4f"
 
 [[package]]
 name = "autocfg"
@@ -458,9 +458,9 @@ checksum = "ec0be4795e2f6a28069bec0b5ff3e2ac9bafc99e6a9a7dc3547996c5c816922c"
 
 [[package]]
 name = "rc-zip"
-version = "5.3.0"
+version = "5.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "917010d96cfbd55325038a1db68b0eb70b0a06f70aed2272642c544961c1e9d4"
+checksum = "ebde715984a68b306e5b41884cbcb8158e0e1dbe6e2841212983333b1662c416"
 dependencies = [
  "chardetng",
  "chrono",
@@ -479,9 +479,9 @@ dependencies = [
 
 [[package]]
 name = "rc-zip-sync"
-version = "4.2.5"
+version = "4.2.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "335abe288500174621cf56f4ebd65ec91d3e30b7bc9063b4633fc4e4ffbcb12b"
+checksum = "fdd21d17384a7da18df6b70f49bc2daa84d15e0fa0929bc635541383b3827190"
 dependencies = [
  "oval",
  "rc-zip",

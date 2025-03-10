@@ -20,11 +20,11 @@ include = [
 ]
 
 [dependencies]
-anyhow = "1.0.96"
+anyhow = "1.0.97"
 flate2 = "1.1.0" # TODO: zlib?
 hex = "0.4.3"
 pico-args = { version = "0.5.0", features = ["eq-separator"] }
-rc-zip-sync = { version = "4.2.5", default-features = false, features = ["deflate", "deflate64"] }
+rc-zip-sync = { version = "4.2.6", default-features = false, features = ["deflate", "deflate64"] }
 sha2 = "0.10.8"
 sha3 = "0.10.8"
 tar = "0.4.44"

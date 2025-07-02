@@ -2,7 +2,7 @@ name: Rust Lint
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
       - .github/workflows/lint.yml
       - .cargo/**
@@ -12,7 +12,7 @@ on:
       - deny.toml
       - rustfmt.toml
   pull_request:
-    branches: [ main ]
+    branches: [main]
     paths:
       - .github/workflows/lint.yml
       - .cargo/**
@@ -27,7 +27,7 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-permissions: { }
+permissions: {}
 
 jobs:
   fmt:
@@ -48,7 +48,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        rust-version: [ stable ]
+        rust-version: [stable]
         info:
           - os: macos-latest
           - os: ubuntu-latest

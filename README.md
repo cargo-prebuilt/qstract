@@ -13,7 +13,7 @@ A very basic tar/zip extraction program.
   <!-- - Cargo prebuilt: ```cargo prebuilt qstract``` -->
   <!-- - Cargo binstall: ```cargo binstall qstract --no-confirm``` -->
   <!-- - Cargo quickinstall: ```cargo quickinstall qstract``` -->
-- Install script (unix platforms):
+- Install script (Unix platforms):
 
 ```shell
 bash -c "$(curl -fsSL --tlsv1.2 https://raw.githubusercontent.com/cargo-prebuilt/qstract/main/scripts/install-qstract.sh)"

@@ -1,8 +1,7 @@
 # qstract
 
 [![Rust Build and Test](https://github.com/cargo-prebuilt/qstract/actions/workflows/build.yml/badge.svg?event=push)](https://github.com/cargo-prebuilt/qstract/actions/workflows/build.yml)
-[![Rust Checks](https://github.com/cargo-prebuilt/qstract/actions/workflows/checks.yml/badge.svg?event=push)](https://github.com/cargo-prebuilt/qstract/actions/workflows/checks.yml)
-[![rustc-msrv](https://img.shields.io/badge/rustc-1.74%2B-blue?logo=rust)](https://www.rust-lang.org/tools/install)
+[![rustc-msrv](https://img.shields.io/badge/rustc-1.85%2B-blue?logo=rust)](https://www.rust-lang.org/tools/install)
 
 A very basic tar/zip extraction program.
 

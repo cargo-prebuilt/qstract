@@ -13,7 +13,7 @@ jobs:
   test-install-script-1:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Run install script
         run: ./scripts/install-qstract.sh
       - run: ./qstract ./test/t3archive.tar
@@ -21,7 +21,7 @@ jobs:
   test-install-script-2:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Run install script
         run: LIBC=musl ./scripts/install-qstract.sh
       - run: ./qstract -z ./test/tarchive1.tar.gz
@@ -29,14 +29,14 @@ jobs:
   test-install-script-3:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Run install script
         run: TARGET_STRING=aarch64-apple-darwin ./scripts/install-qstract.sh
 
   test-install-script-4:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Run install script
         run: INSTALL_PATH=/usr/local/bin LIBC=musl ./scripts/install-qstract.sh
       - run: qstract --sha256 ./test/zarchive1.zip

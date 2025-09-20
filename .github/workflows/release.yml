@@ -103,7 +103,7 @@ jobs:
       - name: Chmod
         if: ${{ ! contains(matrix.info.target, 'windows') }}
         run: chmod +x ./${{ env.bin-name }}-${{ matrix.info.target }}
-      - uses: actions/attest-build-provenance@v2
+      - uses: actions/attest-build-provenance@v3
         with:
           subject-path: ./${{ env.bin-name }}-${{ matrix.info.target }}${{ matrix.info.file_ext }}
       - name: Hash
@@ -153,7 +153,7 @@ jobs:
         run: cp ./target/${{ matrix.info.target }}/zmall/${{ env.bin-name }} ./${{ env.bin-name }}-${{ matrix.info.target }}
       - name: Chmod
         run: chmod +x ./${{ env.bin-name }}-${{ matrix.info.target }}
-      - uses: actions/attest-build-provenance@v2
+      - uses: actions/attest-build-provenance@v3
         with:
           subject-path: ./${{ env.bin-name }}-${{ matrix.info.target }}
       - name: Hash

@@ -20,37 +20,37 @@ check-nightly:
 
 check-msvc:
     cargo +nightly fmt --check
-    RUSTFLAGS='-Clink-arg=-fuse-ld=ld64.lld' cargo xwin clippy --all-targets --all-features --workspace --locked --target aarch64-pc-windows-msvc -- -D warnings
-    RUSTFLAGS='-Clink-arg=-fuse-ld=ld64.lld' cargo xwin clippy --all-targets --all-features --workspace --release --locked --target aarch64-pc-windows-msvc -- -D warnings
+    RUSTFLAGS='-Clink-arg=-fuse-ld=lld' cargo xwin clippy --all-targets --all-features --workspace --locked --target aarch64-pc-windows-msvc -- -D warnings
+    RUSTFLAGS='-Clink-arg=-fuse-ld=lld' cargo xwin clippy --all-targets --all-features --workspace --release --locked --target aarch64-pc-windows-msvc -- -D warnings
     cargo deny check
 
 build:
-    cargo build --locked
+    cargo +nightly build --locked
 
 buildr:
-    cargo build --locked --release
+    cargo +nightly build --locked --release
 
 build-msvc:
-    cargo xwin build --locked --target aarch64-pc-windows-msvc
+    cargo +nightly xwin build --locked --target aarch64-pc-windows-msvc
 
 buildr-msvc:
-    cargo xwin build --locked --release --target aarch64-pc-windows-msvc
+    cargo +nightly xwin build --locked --release --target aarch64-pc-windows-msvc
 
 run +ARGS:
-    cargo run --locked -- {{ARGS}}
+    cargo +nightly run --locked -- {{ARGS}}
 
 runr +ARGS:
-    cargo run --locked --release -- {{ARGS}}
+    cargo +nightly run --locked --release -- {{ARGS}}
 
 runq +ARGS:
-    cargo run --locked --profile=quick -- {{ARGS}}
+    cargo +nightly run --locked --profile=quick -- {{ARGS}}
 
 ink-cross TARGET:
     docker run -it --rm --pull=always \
     -e CARGO_TARGET_DIR=/ptarget \
     --mount type=bind,source={{pwd}},target=/project \
     --mount type=bind,source=$HOME/.cargo/registry,target=/usr/local/cargo/registry \
-    ghcr.io/cargo-prebuilt/ink-cross:stable-{{TARGET}} \
+    ghcr.io/cargo-prebuilt/ink-cross:nightly-{{TARGET}} \
     build --verbose --workspace --locked --target {{TARGET}}
 
 ink-crossr TARGET:
@@ -58,7 +58,7 @@ ink-crossr TARGET:
     -e CARGO_TARGET_DIR=/ptarget \
     --mount type=bind,source={{pwd}},target=/project \
     --mount type=bind,source=$HOME/.cargo/registry,target=/usr/local/cargo/registry \
-    ghcr.io/cargo-prebuilt/ink-cross:stable-{{TARGET}} \
+    ghcr.io/cargo-prebuilt/ink-cross:nightly-{{TARGET}} \
     build --verbose --workspace --locked --release --target {{TARGET}}
 
 default_log_level := 'INFO'
@@ -70,11 +70,13 @@ sup-lint LOG_LEVEL=default_log_level:
     -e RUN_LOCAL=true \
     -e SHELL=/bin/bash \
     -e DEFAULT_BRANCH=main \
+    -e LINTER_RULES_PATH=/tmp/lint \
     -e VALIDATE_ALL_CODEBASE=true \
     -e VALIDATE_JSCPD=false \
     -e VALIDATE_RUST_2015=false \
     -e VALIDATE_RUST_2018=false \
     -e VALIDATE_RUST_2021=false \
+    -e VALIDATE_RUST_2024=false \
     -e VALIDATE_RUST_CLIPPY=false \
     -v {{pwd}}:/tmp/lint \
     ghcr.io/super-linter/super-linter:slim-latest

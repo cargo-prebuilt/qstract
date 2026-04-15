@@ -26,7 +26,7 @@ jobs:
       prerelease: ${{ steps.regex-tag.outputs.match == '' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           persist-credentials: false
       - uses: KyoriPowered/action-regex-match@v5
@@ -39,10 +39,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: [release, build-native, build-ink-cross]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           persist-credentials: false
-      - uses: actions/download-artifact@v6
+      - uses: actions/download-artifact@v8
       - name: Merge hashes
         shell: bash
         run: |
@@ -84,7 +84,7 @@ jobs:
             file_ext: .exe
     runs-on: ${{ matrix.info.os }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           persist-credentials: false
       - uses: cargo-prebuilt/cargo-prebuilt-action@v5
@@ -103,13 +103,13 @@ jobs:
       - name: Chmod
         if: ${{ ! contains(matrix.info.target, 'windows') }}
         run: chmod +x ./${{ env.bin-name }}-${{ matrix.info.target }}
-      - uses: actions/attest-build-provenance@v3
+      - uses: actions/attest-build-provenance@v4
         with:
           subject-path: ./${{ env.bin-name }}-${{ matrix.info.target }}${{ matrix.info.file_ext }}
       - name: Hash
         run: coreutils sha256sum ./${{ env.bin-name }}-${{ matrix.info.target }}${{ matrix.info.file_ext }} > ${{ matrix.info.target }}.sha256
       - name: Artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: target-${{ matrix.info.target }}
           path: |
@@ -136,7 +136,7 @@ jobs:
           - target: x86_64-unknown-netbsd
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           persist-credentials: false
       - uses: cargo-prebuilt/cargo-prebuilt-action@v5
@@ -153,13 +153,13 @@ jobs:
         run: cp ./target/${{ matrix.info.target }}/zmall/${{ env.bin-name }} ./${{ env.bin-name }}-${{ matrix.info.target }}
       - name: Chmod
         run: chmod +x ./${{ env.bin-name }}-${{ matrix.info.target }}
-      - uses: actions/attest-build-provenance@v3
+      - uses: actions/attest-build-provenance@v4
         with:
           subject-path: ./${{ env.bin-name }}-${{ matrix.info.target }}
       - name: Hash
         run: coreutils sha256sum ./${{ env.bin-name }}-${{ matrix.info.target }} > ${{ matrix.info.target }}.sha256
       - name: Artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: target-${{ matrix.info.target }}
           path: |

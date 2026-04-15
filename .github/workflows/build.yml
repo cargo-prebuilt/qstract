@@ -35,7 +35,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        rust-version: [stable, nightly, 1.85] # Stable, Beta, Nightly, MSRV
+        rust-version: [stable, nightly, 1.94] # Stable, Beta, Nightly, MSRV
         info:
           - os: macos-latest
             target: aarch64-apple-darwin
@@ -51,7 +51,7 @@ jobs:
             file_ext: .exe
     runs-on: ${{ matrix.info.os }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           persist-credentials: false
       - uses: cargo-prebuilt/cargo-prebuilt-action@v5
@@ -70,7 +70,7 @@ jobs:
         run: cargo +${{steps.toolchain.outputs.name}} auditable build --verbose --workspace --locked --target ${{ matrix.info.target }}
       - name: Artifact
         if: ${{ matrix.rust-version == 'nightly' }}
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: target-na-${{ matrix.info.target }}
           path: |
@@ -96,7 +96,7 @@ jobs:
           - target: x86_64-unknown-netbsd
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           persist-credentials: false
       - uses: Swatinem/rust-cache@v2
@@ -114,7 +114,7 @@ jobs:
           auditable build --verbose --workspace --locked --target ${{ matrix.info.target }}
       - name: Artifact
         if: ${{ matrix.rust-version == 'nightly' }}
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: target-ic-${{ matrix.info.target }}
           path: |
@@ -130,7 +130,7 @@ jobs:
           - os: ubuntu-latest
     runs-on: ${{ matrix.info.os }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           persist-credentials: false
       - uses: dtolnay/rust-toolchain@master
